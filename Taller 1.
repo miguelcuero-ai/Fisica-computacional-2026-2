@@ -1,0 +1,17 @@
+Inicio
+
+    Definir la constante g = 9.8
+
+    Leer la rapidez inicial v0
+    Leer el ángulo en grados
+
+    Mostrar los valores ingresados
+
+    Convertir el ángulo de grados a radianes
+
+    Calcular:
+        h_max = v0² × sin²(angulo_rad) / (2 × g)
+
+    Mostrar la altura máxima
+
+Fin
