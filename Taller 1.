@@ -1,7 +1,7 @@
-Punto 1: Diagrmas y Pseudocodigos
--
--
--
+Punto 1: Diagramas y Pseudocodigos
+a. Sacar el libro "Cien años de soledad" de la Biblioteca Central.
+b. La receta para una tortilla.
+c. Almorzar en la Cafetería Central.
 
 
 Punto 2: Altura máxima de un proyectil
@@ -92,3 +92,6 @@ teoricos = [4.9000, 10.2041, 5.1020408]
 for i in range(3):
     error = abs(obtenidos[i] - teoricos[i]) / teoricos[i] * 100
     print("Caso", i + 1, ":", error, "%")
+
+
+Punto 3: Glosario
