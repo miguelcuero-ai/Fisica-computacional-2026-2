@@ -1,3 +1,11 @@
+Punto 1: Diagrmas y Pseudocodigos
+-
+-
+-
+
+
+Punto 2: Altura máxima de un proyectil
+
 1. Pseudocodigo
 
 Inicio
@@ -35,13 +43,7 @@ Inicio
 
 Fin
 
-2. Diccionario de datos
-
-tabla = pd.DataFrame(datos)
-
-tabla
-
-3. Codigo.
+2. Codigo.
 
 %%writefile proyectil.f90
 
@@ -82,10 +84,10 @@ end program proyectil
 3. Pass/Fail
 
 # Valores obtenidos
-obtenidos = [4.9000, 10.2040815, 5.1020408]
+obtenidos = [4.9000, 10.204086, 5.1020408]
 
 # Valores teóricos
-teoricos = [4.9000, 10.2040816, 5.1020408]
+teoricos = [4.9000, 10.2041, 5.1020408]
 
 for i in range(3):
     error = abs(obtenidos[i] - teoricos[i]) / teoricos[i] * 100
