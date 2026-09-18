@@ -1,17 +1,92 @@
+1. Pseudocodigo
+
 Inicio
 
-    Definir la constante g = 9.8
+    Identificar valores iniciales del problema
+
+                    |
+
+    Definir las constantes y variables
+
+                    |
 
     Leer la rapidez inicial v0
+
+                    |
+
     Leer el ángulo en grados
+
+                    |
 
     Mostrar los valores ingresados
 
+                    |
+
     Convertir el ángulo de grados a radianes
+
+                    |
 
     Calcular:
         h_max = v0² × sin²(angulo_rad) / (2 × g)
 
+                        |
+
     Mostrar la altura máxima
 
 Fin
+
+2. Diccionario de datos
+
+tabla = pd.DataFrame(datos)
+
+tabla
+
+3. Codigo.
+
+%%writefile proyectil.f90
+
+program proyectil
+  implicit none
+
+  ! Diccionario de datos
+  real, parameter :: g = 9.8
+  real :: v0
+  real :: angulo_grados
+  real :: angulo_rad
+  real :: h_max
+
+  ! Entrada de datos
+  print *, "Ingrese la rapidez inicial en m/s:"
+  read *, v0
+
+  print *, "ingrese el angulo en grados:"
+  read *, angulo_grados
+
+  ! Eco de las entradas
+  print *, "--------------------------------"
+  print *, "Rapidez inicial: ", v0, " m/s"
+  print *, "Angulos:", angulo_grados, " grados"
+  print *, "--------------------------------"
+
+  ! Convertir de grados a radianes
+  angulo_rad = angulo_grados * 3.14159265/180.0
+
+  ! Calculo de la altura maxima
+  h_max = (v0**2 * sin(angulo_rad)**2) / (2.0 * g)
+
+  ! Salida
+  print *, "altura maxima: ", h_max, " m"
+
+end program proyectil
+
+3. Pass/Fail
+
+# Valores obtenidos
+obtenidos = [4.9000, 10.2040815, 5.1020408]
+
+# Valores teóricos
+teoricos = [4.9000, 10.2040816, 5.1020408]
+
+for i in range(3):
+    error = abs(obtenidos[i] - teoricos[i]) / teoricos[i] * 100
+    print("Caso", i + 1, ":", error, "%")
