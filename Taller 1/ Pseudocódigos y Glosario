@@ -58,19 +58,19 @@ FIN
 
 Punto 3: Glosario
 
-Algoritmo: Es un conjunto de pasos que se siguen para resolver o realizar una tarea.
-Variable: Es un dato que cambia durante el desarrollo del ejercicio
-Constante: Es un valor fijo durante el desarrollo del ejercicio
-Tipo de dato: Es el tipo de información que usa una variable
-Diagrama de flujo: Es un conjunto de pasos para realizar una practica, acción o tarea
-Pseudocódigo: Es la descripción de un algoritmo
-Entrada de datos: Información que suministra el usuario
-Salida de datos: Información que es obtenida por el programa o sistema
-Implicit none: Es una instrucción del lenguaje de FORTRAN que obliga a declarar las variables
-Diccionario de datos: Información de las variables, constantes y resultados de un problema
-División entera: Es una división que se realiza con numeros enteros y su resultado tambien es un entero, esto es porque solo conserva la parte entera del
-Función intrínseca: Función que se incorpora en FORTRAN para hacer uso de funciones como sin(), cos(), sqrt(), etc
-Operador lógico: Es una palabra que permite combinar o evaluar condiciones.
-Error de sintaxis: Es un error que suele ocurrir cuando un código no cumple las reglas de escritura del lenguaje trabajado
-Error de ejecución: Es un error que suele verse cuando se esta realizando el problema.
-Error lógico: Es cuando se esta ejecutando un programa y este da error por se usa una logica equivocada.
+-Algoritmo: Es un conjunto de pasos que se siguen para resolver o realizar una tarea.
+-Variable: Es un dato que cambia durante el desarrollo del ejercicio
+-Constante: Es un valor fijo durante el desarrollo del ejercicio
+-Tipo de dato: Es el tipo de información que usa una variable
+-Diagrama de flujo: Es un conjunto de pasos para realizar una practica, acción o tarea
+-Pseudocódigo: Es la descripción de un algoritmo
+-Entrada de datos: Información que suministra el usuario
+-Salida de datos: Información que es obtenida por el programa o sistema
+-Implicit none: Es una instrucción del lenguaje de FORTRAN que obliga a declarar las variables
+-Diccionario de datos: Información de las variables, constantes y resultados de un problema
+-División entera: Es una división que se realiza con numeros enteros y su resultado tambien es un entero, esto es porque solo conserva la parte entera del
+-Función intrínseca: Función que se incorpora en FORTRAN para hacer uso de funciones como sin(), cos(), sqrt(), etc
+-Operador lógico: Es una palabra que permite combinar o evaluar condiciones.
+-Error de sintaxis: Es un error que suele ocurrir cuando un código no cumple las reglas de escritura del lenguaje trabajado
+-Error de ejecución: Es un error que suele verse cuando se esta realizando el problema.
+-Error lógico: Es cuando se esta ejecutando un programa y este da error por se usa una logica equivocada.
