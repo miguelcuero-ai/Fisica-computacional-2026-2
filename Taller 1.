@@ -2,9 +2,59 @@ Punto 1: Diagramas y Pseudocodigos
 
 a. Sacar el libro "Cien años de soledad" de la Biblioteca Central.
 
+ INICIO 
+    Entrar a la biblioteca
+
+    Si lleva objetos ENTONCES guardarlos
+SINO 
+    ir a buscar el libro
+
+    Si el libro está disponible ENTONCES Solicitar el préstamo 
+SINO 
+    esperar el dia que este disponible
+
+    Si tiene carnet ENTONCES registrar el préstamo
+SINO 
+    buscar el tabulado u otro documento
+
+FIN
+
 b. La receta para una tortilla.
+
+INICIO
+
+    Preparar los huevos
+    Batir los huevos
+
+MIENTRAS 
+    la mezcla no esté lista Seguir batiendo
+
+    Calentar la sartén
+
+MIENTRAS 
+    la temperatura no sea adecuada, esperar o ajustar la temperatura
+
+    Cocinar los huevos y condimentar
+
+FIN
+
 c. Almorzar en la Cafetería Central.
 
+INICIO
+
+    Salir del salón
+
+    SI la puerta está cerrada ENTONCES
+    Abrir la puerta
+
+    Ir a la cafetería
+
+    SI tiene almuerzo ENTONCES
+    Tomar el almuerzo
+SINO
+    Recargar y luego tomar el almuerzo
+
+FIN
 
 Punto 2: Altura máxima de un proyectil
 
@@ -14,32 +64,18 @@ Inicio
 
     Identificar valores iniciales del problema
 
-                    |
-
     Definir las constantes y variables
-
-                    |
 
     Leer la rapidez inicial v0
 
-                    |
-
     Leer el ángulo en grados
-
-                    |
 
     Mostrar los valores ingresados
 
-                    |
-
     Convertir el ángulo de grados a radianes
-
-                    |
 
     Calcular:
         h_max = v0² × sin²(angulo_rad) / (2 × g)
-
-                        |
 
     Mostrar la altura máxima
 
@@ -97,3 +133,20 @@ for i in range(3):
 
 
 Punto 3: Glosario
+
+Algoritmo: Es un conjunto de pasos que se siguen para resolver o realizar una tarea.
+Variable: Es un dato que cambia durante el desarrollo del ejercicio
+Constante: Es un valor fijo durante el desarrollo del ejercicio
+Tipo de dato: Es el tipo de información que usa una variable
+Diagrama de flujo: Es un conjunto de pasos para realizar una practica, acción o tarea
+Pseudocódigo: Es la descripción de un algoritmo
+Entrada de datos: Información que suministra el usuario
+Salida de datos: Información que es obtenida por el programa o sistema
+Implicit none: Es una instrucción del lenguaje de FORTRAN que obliga a declarar las variables
+Diccionario de datos: Información de las variables, constantes y resultados de un problema
+División entera: Es una división que se realiza con numeros enteros y su resultado tambien es un entero, esto es porque solo conserva la parte entera del
+Función intrínseca:
+Operador lógico:
+Error de sintaxis:
+Error de ejecución:
+Error lógico:
