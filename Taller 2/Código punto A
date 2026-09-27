@@ -1,0 +1,100 @@
+#Punto 1A
+
+def suma_seno(x, tol=1e-8, max_iter=200):
+
+    term = x
+    total = x
+    n = 0
+
+    for i in range(max_iter):
+
+        n += 1
+
+        term = -term * x**2 / ((2*n)*(2*n + 1))
+
+        total = total + term
+
+        if abs(term) < tol * max(1, abs(total)):
+            break
+
+    return total, i + 1
+
+print()
+print("Punto 2A")
+#Punto 2A
+
+import math
+
+print(f"{'x':>8} {'iter':>8} {'suma':>16} {'error relativo':>16}")
+
+for x in [0.5, 1.0, 2.0, 3.0, 6.0, 4*math.pi]:
+
+    approx, iters = suma_seno(x)
+
+    exacto = math.sin(x)
+
+    if exacto != 0:
+        error_relativo = abs(approx - exacto) / abs(exacto)
+    else:
+        error_relativo = abs(approx - exacto)
+
+    print(f"{x:8.4f} {iters:8d} {approx:16.10f} {error_relativo:16.2e}")
+
+print()
+print("Punto 4A")
+#Punto 4A
+
+approx, iters = suma_seno(150)
+
+exacto = math.sin(150)
+
+print("aproximado =", approx)
+print("exacto     =", exacto)
+print("iteraciones =", iters)
+
+
+print()
+print("Punto 5A")
+#Punto 5A
+
+import math
+
+def suma_seno_ingenua(x, tol=1e-8, max_iter=200):
+
+    total = 0
+
+    for n in range(max_iter):
+
+        termino = ((-1)**n)*(x**(2*n+1))/math.factorial(2*n+1)
+
+        total = total + termino
+
+        if abs(termino) < tol * max(1, abs(total)):
+            break
+
+    return total, n+1
+
+for x in [1.0, 3.0, 6.0, 10.0]:
+
+    r1, i1 = suma_seno(x)
+
+    r2, i2 = suma_seno_ingenua(x)
+
+    print("x =", x)
+    print("recursiva =", r1, "iter =", i1)
+    print("ingenua   =", r2, "iter =", i2)
+    print()
+
+
+# --- Verificación Parte A: suma_seno_reducida ---
+casos_a = [                                        # Lista de (x, valor_esperado, tolerancia) para probar la Parte A.
+    (0.5, math.sin(0.5), 1e-8),                    # Caso dentro del rango normal de convergencia rápida.
+    (100.0, math.sin(100.0), 1e-6),                # Caso con x grande: solo debe pasar si se usó reducción de argumento.
+    (-237.0, math.sin(-237.0), 1e-6),              # Caso con x grande y negativo.
+]
+
+for x, esperado, tol in casos_a:                   # Recorre cada caso de prueba uno por uno.
+    obtenido, _ = suma_seno(x)             # Calcula sin(x) con la función que el estudiante debe haber completado.
+    ok = abs(obtenido - esperado) < tol             # Compara contra el valor de referencia dentro de la tolerancia.
+    estado = "PASS" if ok else "FAIL"               # Traduce el resultado booleano a texto legible.
+    print(f"{estado}  x={x:>8.1f}   obtenido={obtenido: .10f}   esperado={esperado: .10f}")  # Imprime el veredicto de este caso.
