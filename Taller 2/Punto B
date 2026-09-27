@@ -1,1 +1,95 @@
+import numpy as np
+import math
+import matplotlib.pyplot as plt
 
+print()
+print("Punto 1B")
+#Punto 1B
+
+t_medio = 5.0
+
+lam = math.log(2) / t_medio
+
+print("lambda =", lam)
+
+
+#Punto 2B
+
+t = np.linspace(0, 30, 100)
+
+print()
+print("Punto 3B")
+#Punto 3B
+
+N0 = 10000
+t = np.array([5, 10, 15])
+
+N = N0 * np.exp(-lam * t)
+
+print("N =",N)
+
+print()
+print("Punto 4B")
+#Punto 4B
+
+plt.plot(t, N)
+
+plt.title("Decaimiento radiactivo")
+plt.xlabel("Tiempo (años)")
+plt.ylabel("Número de núcleos")
+plt.grid()
+
+plt.show()
+
+print()
+print("Punto 5B")
+#Punto 5B
+
+plt.plot(t, N)
+
+plt.scatter([5, 10, 15], [5000, 2500, 1250])
+
+plt.title("Decaimiento radiactivo")
+plt.xlabel("Tiempo (años)")
+plt.ylabel("Número de núcleos")
+plt.grid()
+
+plt.show()
+
+print()
+print("Punto 6B")
+#Punto 6B
+t_50 = 5
+t_25 = 10
+t_10 = -np.log(0.10) / lam
+indice = np.argmin(abs(N - 1000))
+
+print("50 %:", t_50, "años")
+print("25 %:", t_25, "años")
+print("10 %:", t_10, "años")
+
+print("indice =",t[indice])
+
+print()
+print("Verificación punto C")
+# --- Parte B: complete N_decaimiento y luego corra la verificación ---
+def N_decaimiento(t, N0=10000, t_medio=5.0):        # Complete esta función según N(t) = N0 * exp(-lambda*t).
+    N = N0 * np.exp(-lam * t)
+    return N
+
+# --- Verificación Parte B: N_decaimiento ---
+
+casos_b = [                                        # Lista de (t, fracción_esperada): fracción de N0 que debería quedar en cada instante.
+    (0.0, 1.00),                                   # En t=0 debe quedar el 100% de la muestra.
+    (5.0, 0.50),                                   # En t = t_1/2 (una vida media) debe quedar el 50%.
+    (10.0, 0.25),                                  # En t = 2*t_1/2 (dos vidas medias) debe quedar el 25%.
+]
+
+for t, fraccion_esperada in casos_b:               # Recorre cada caso de prueba.
+    try:                                           # Evita que un NotImplementedError detenga toda la celda de verificación.
+        obtenido = N_decaimiento(t) / 10000        # Calcula qué fracción de N0 queda en el instante t.
+        ok = abs(obtenido - fraccion_esperada) < 1e-3  # Compara contra la fracción esperada con tolerancia razonable.
+        estado = "PASS" if ok else "FAIL"
+        print(f"{estado}  t={t:>5.1f} años   fraccion={obtenido:.3f}   esperada={fraccion_esperada:.3f}")
+    except NotImplementedError as e:               # Si aún no se ha completado la función, lo informa sin detener la celda.
+        print(f"FAIL  t={t:>5.1f} años   ({e})")
