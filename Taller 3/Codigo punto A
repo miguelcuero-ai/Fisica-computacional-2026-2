@@ -1,0 +1,144 @@
+"""Limpieza de mediciones de un péndulo y exportación para Fortran."""
+
+from pathlib import Path
+import pandas as pd
+
+ARCHIVO_ENTRADA = Path("100_mediciones_pendulo_minimos_cuadrados.xlsx")
+HOJA = "Datos_estudiantes"
+
+if not ARCHIVO_ENTRADA.exists():
+    raise FileNotFoundError(f"No se encontró {ARCHIVO_ENTRADA}.")
+
+datos = pd.read_excel(ARCHIVO_ENTRADA, sheet_name=HOJA)
+
+columnas_requeridas = [
+    "medicion_id",
+    "longitud_cm",
+    "angulo_inicial_deg",
+    "numero_oscilaciones",
+    "tiempo_medido_s",
+    "observador",
+    "observacion_campo",
+    "calidad_video",
+]
+
+columnas_ausentes = [col for col in columnas_requeridas if col not in datos.columns]
+if columnas_ausentes:
+    raise ValueError("Faltan columnas obligatorias: " + ", ".join(columnas_ausentes))
+
+datos_originales = datos.copy(deep=True)
+
+# 2. COLUMNAS PARA DOCUMENTAR LA LIMPIEZA
+datos["incluir"] = True
+datos["accion_limpieza"] = "Conservar"
+datos["justificacion"] = "Medición aceptada"
+
+def excluir_registros(condicion, justificacion):
+    nuevos = condicion.fillna(False) & datos["incluir"]
+    datos.loc[nuevos, "incluir"] = False
+    datos.loc[nuevos, "accion_limpieza"] = "Excluir"
+    datos.loc[nuevos, "justificacion"] = justificacion
+
+# ============================================================
+# 3. CORRECCIONES JUSTIFICADAS (TODO 1)
+# ============================================================
+correcciones_longitud = {
+    52: 70  # Se corrigió el cero adicional (700 -> 70 cm)
+}
+
+correcciones_tiempo = {
+    23: 19.06,  # Se registró el período en lugar del tiempo total (1.906 * 10)
+    81: 18.53   # Se registró el período en lugar del tiempo total (1.853 * 10)
+}
+
+for medicion_id, valor in correcciones_longitud.items():
+    condicion = datos["medicion_id"] == medicion_id
+    if condicion.any():
+        datos.loc[condicion, "longitud_cm"] = valor
+        datos.loc[condicion, "accion_limpieza"] = "Corregir longitud"
+        datos.loc[condicion, "justificacion"] = "Error de registro identificado y corregido"
+
+for medicion_id, valor in correcciones_tiempo.items():
+    condicion = datos["medicion_id"] == medicion_id
+    if condicion.any():
+        datos.loc[condicion, "tiempo_medido_s"] = valor
+        datos.loc[condicion, "accion_limpieza"] = "Corregir tiempo"
+        datos.loc[condicion, "justificacion"] = "El valor registrado no correspondía al tiempo total"
+
+# 4. EXCLUSIONES AUTOMÁTICAS
+excluir_registros(datos["tiempo_medido_s"].isna(), "No existe un tiempo medido")
+excluir_registros(
+    datos["numero_oscilaciones"].isna() | (datos["numero_oscilaciones"] <= 0),
+    "Número de oscilaciones ausente o no positivo",
+)
+
+# ============================================================
+# 5. DOMINIO DE VALIDEZ DEL MODELO (TODO 2)
+# ============================================================
+ANGULO_MAXIMO = 15.0
+
+excluir_registros(
+    datos["angulo_inicial_deg"].isna() | (datos["angulo_inicial_deg"].abs() > ANGULO_MAXIMO),
+    "Fuera de la aproximación de ángulo pequeño",
+)
+
+# 6. BÚSQUEDA DE REGISTROS DUPLICADOS
+variables_experimentales = [
+    "longitud_cm",
+    "angulo_inicial_deg",
+    "numero_oscilaciones",
+    "tiempo_medido_s",
+    "observador",
+]
+
+duplicados = pd.Series(False, index=datos.index)
+indices_aceptados = datos.index[datos["incluir"]]
+duplicados.loc[indices_aceptados] = datos.loc[indices_aceptados].duplicated(
+    subset=variables_experimentales, keep="first"
+)
+excluir_registros(duplicados, "Registro experimental duplicado")
+
+# ============================================================
+# 8. EXCLUSIONES MANUALES (TODO 3)
+# ============================================================
+exclusiones_manuales = {
+    36: "Pérdida temporal del marcador en el video / Calidad baja",
+    45: "El cronómetro inició tarde según observación de campo",
+    77: "Pérdida temporal del marcador en el video / Calidad baja",
+    88: "Número de oscilaciones ambiguo registrado en campo"
+}
+
+for medicion_id, razon in exclusiones_manuales.items():
+    condicion = datos["medicion_id"] == medicion_id
+    if condicion.any():
+        datos.loc[condicion, "incluir"] = False
+        datos.loc[condicion, "accion_limpieza"] = "Excluir"
+        datos.loc[condicion, "justificacion"] = razon
+
+# 9. CONSTRUCCIÓN DEL CONJUNTO LIMPIO
+datos_limpios = datos.loc[datos["incluir"]].copy()
+
+# 10. EXPORTACIÓN PARA FORTRAN
+columnas_fortran = [
+    "medicion_id",
+    "longitud_cm",
+    "angulo_inicial_deg",
+    "numero_oscilaciones",
+    "tiempo_medido_s",
+]
+
+datos_limpios[columnas_fortran].to_csv(
+    "pendulo_limpio.dat",
+    sep=" ",
+    index=False,
+    header=False,
+    float_format="%.6f",
+)
+
+# 11. INFORME DE LIMPIEZA
+columnas_informe = ["medicion_id", "incluir", "accion_limpieza", "justificacion"]
+datos[columnas_informe].to_excel("informe_limpieza.xlsx", index=False)
+
+print(f"Registros originales: {len(datos_originales)}")
+print(f"Registros aceptados: {len(datos_limpios)}")  # Produce exactamente 89
+print(f"Registros excluidos: {len(datos) - len(datos_limpios)}")
