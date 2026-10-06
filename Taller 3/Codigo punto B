@@ -1,0 +1,124 @@
+%%writefile ajuste_pendulo.f90
+program ajuste_pendulo
+  use iso_fortran_env, only: real64
+  implicit none
+
+  ! Declaración de variables básicas
+  integer :: unidad_in, unidad_salida, estado
+  integer :: id, n_osc, n
+
+  real(real64) :: longitud_cm, angulo_deg, tiempo_s
+  real(real64) :: x, y, periodo_s, y_pred, y_media
+  real(real64) :: sx, sy, sxx, sxy, den
+  real(real64) :: a, b, r2, g
+  real(real64) :: sse, sst
+
+  real(real64), parameter :: pi = 3.14159265358979323846_real64
+
+  ! ===================================================================
+  ! PUNTO 1: Abrir pendulo_limpio.dat y comprobar lectura inicial
+  ! ===================================================================
+  open(newunit=unidad_in, file='pendulo_limpio.dat', status='old', &
+       action='read', iostat=estado)
+
+  if (estado /= 0) then
+     print *, 'Error al intentar abrir el archivo pendulo_limpio.dat'
+     stop
+  end if
+
+  ! ===================================================================
+  ! PUNTO 2-5: Lectura, conversiones y acumuladores
+  ! ===================================================================
+  n   = 0
+  sx  = 0.0_real64
+  sy  = 0.0_real64
+  sxx = 0.0_real64
+  sxy = 0.0_real64
+
+  do
+     read(unidad_in, *, iostat=estado) id, longitud_cm, angulo_deg, n_osc, tiempo_s
+     if (estado /= 0) exit
+
+     x = longitud_cm / 100.0_real64
+     periodo_s = tiempo_s / real(n_osc, real64)
+     y = periodo_s**2
+
+     n   = n + 1
+     sx  = sx + x
+     sy  = sy + y
+     sxx = sxx + x*x
+     sxy = sxy + x*y
+  end do
+
+  close(unidad_in)
+
+  if (n < 2) then
+     print *, 'Error: Menos de dos datos para el ajuste.'
+     stop
+  end if
+
+  den = real(n, real64) * sxx - sx * sx
+  if (abs(den) < 1.0e-12_real64) then
+     print *, 'Error: Denominador nulo.'
+     stop
+  end if
+
+  ! ===================================================================
+  ! PUNTO 6: Calcular pendiente (a) e intercepto (b)
+  ! ===================================================================
+  a = (real(n, real64) * sxy - sx * sy) / den
+  b = (sy - a * sx) / real(n, real64)
+
+  ! ===================================================================
+  ! PUNTO 7: Estimar g = 4*pi^2 / a
+  ! ===================================================================
+  g = (4.0_real64 * pi**2) / a
+
+  ! ===================================================================
+  ! PUNTO 8: Segunda lectura para calcular R^2
+  ! ===================================================================
+  y_media = sy / real(n, real64)
+  sse = 0.0_real64
+  sst = 0.0_real64
+
+  open(newunit=unidad_in, file='pendulo_limpio.dat', status='old', &
+       action='read', iostat=estado)
+
+  do
+     read(unidad_in, *, iostat=estado) id, longitud_cm, angulo_deg, n_osc, tiempo_s
+     if (estado /= 0) exit
+
+     x = longitud_cm / 100.0_real64
+     periodo_s = tiempo_s / real(n_osc, real64)
+     y = periodo_s**2
+
+     y_pred = a * x + b
+     sse = sse + (y - y_pred)**2
+     sst = sst + (y - y_media)**2
+  end do
+
+  close(unidad_in)
+
+  r2 = 1.0_real64 - (sse / sst)
+
+  ! ===================================================================
+  ! PUNTO 9: Mostrar resultados por pantalla
+  ! ===================================================================
+  print *, 'N (numero de datos) = ', n
+  print *, 'Pendiente a         = ', a, ' s^2/m'
+  print *, 'Intercepto b        = ', b, ' s^2'
+  print *, 'Coeficiente R^2     = ', r2
+  print *, 'Gravedad g          = ', g, ' m/s^2'
+
+  ! ===================================================================
+  ! PUNTO 10: Escribir en resultados_ajuste.dat
+  ! ===================================================================
+  open(newunit=unidad_salida, file='resultados_ajuste.dat', &
+       status='replace', action='write')
+  write(unidad_salida, *) n, a, b, r2, g
+  close(unidad_salida)
+
+end program ajuste_pendulo
+
+!gfortran -std=f2008 -Wall -Wextra -fcheck=all -o ajuste_pendulo ajuste_pendulo.f90
+!./ajuste_pendulo
