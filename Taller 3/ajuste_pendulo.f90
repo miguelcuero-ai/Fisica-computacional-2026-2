@@ -1,4 +1,3 @@
-%%writefile ajuste_pendulo.f90
 program ajuste_pendulo
   use iso_fortran_env, only: real64
   implicit none
@@ -119,6 +118,3 @@ program ajuste_pendulo
   close(unidad_salida)
 
 end program ajuste_pendulo
-
-!gfortran -std=f2008 -Wall -Wextra -fcheck=all -o ajuste_pendulo ajuste_pendulo.f90
-!./ajuste_pendulo
